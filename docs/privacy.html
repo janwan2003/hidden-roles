@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy · Turncoat</title>
+  <meta name="description" content="What Turncoat stores, why, and when it is deleted.">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="wrap legal">
+    <header class="top"><a class="brand" href="https://pb-hidden-roles.pages.dev/"><img src="icon.svg" alt="">Turncoat</a></header>
+    <div class="card">
+      <h1>Privacy</h1>
+      <p class="muted">Last updated 21 November 2026.</p>
+      <p>Turncoat is a game you play with people you invite. It has no accounts, no ads and no tracking.</p>
+      <h2>What we store</h2>
+      <ul>
+        <li><b>Games:</b> the game name, its pace, your time zone (so the day ends at 8 pm your time), and the game's progress.</li>
+        <li><b>Players:</b> the nickname you type, your secret role, your votes, and messages in the turncoats' chat.</li>
+        <li><b>Your seat:</b> a random key saved in your browser's local storage. The server keeps only a one-way hash of it.</li>
+        <li><b>Rate limits:</b> a counter per IP address, kept for at most an hour, so one visitor cannot overload the service.</li>
+      </ul>
+      <p>We do not ask for your real name, email, phone number or contacts, and we do not use cookies or analytics.</p>
+      <h2>Who can see it</h2>
+      <p>Anyone with the game link can see the game name, the nicknames and the public news (who was taken out or banished). Roles are revealed as players leave the game and in full at the end. Votes are shown after each vote closes. The turncoats' chat is shown only to turncoats.</p>
+      <h2>Deletion</h2>
+      <p>Games are deleted automatically 60 days after the last move. The host can delete a game at any time from the game page.</p>
+      <h2>Hosting</h2>
+      <p>Turncoat runs on Cloudflare (Pages, Functions and D1). Cloudflare processes requests to deliver the service.</p>
+      <h2>Contact</h2>
+      <p>Questions or deletion requests: open an issue at <a href="https://github.com/janwan2003/hidden-roles/issues">github.com/janwan2003/hidden-roles</a>.</p>
+    </div>
+    <footer><p><b>About:</b> Turncoat is a free hidden-role game for group chats.</p></footer>
+  </div>
+</body>
+</html>

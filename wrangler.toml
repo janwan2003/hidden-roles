@@ -1,0 +1,8 @@
+name = "pb-hidden-roles"
+pages_build_output_dir = "public"
+compatibility_date = "2025-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "pb-hidden-roles"
+database_id = "bef51713-32f8-41af-bbac-2e3b84696c0b"

@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /g/
+Disallow: /api/
+Sitemap: https://pb-hidden-roles.pages.dev/sitemap.xml

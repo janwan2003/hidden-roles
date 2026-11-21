@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!--META-->
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon-180.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#12142a">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="top"><a class="brand" href="/"><img src="/icon.svg" alt="">Turncoat</a><span class="small muted" id="whoami"></span></header>
+    <main id="app" aria-live="polite">
+      <div class="card" id="loading"><p class="muted">Loading the game…</p></div>
+      <section id="head" class="card hidden"></section>
+      <form id="join" class="card glow hidden" novalidate>
+        <h2>Join the game</h2>
+        <p class="muted" id="join-sub"></p>
+        <div class="field">
+          <label for="jnick">Your nickname</label>
+          <input id="jnick" type="text" maxlength="20" required placeholder="The name your group knows you by" autocomplete="nickname">
+        </div>
+        <button class="btn block" type="submit">Join</button>
+        <p class="err" id="join-err" role="alert"></p>
+      </form>
+      <section id="role" class="card role hidden"></section>
+      <section id="main" class="hidden"></section>
+      <section id="chat" class="card hidden">
+        <h3>Turncoats' chat <span class="pill red">only turncoats see this</span></h3>
+        <div class="chatlog" id="chatlog"></div>
+        <form id="chatform" class="row">
+          <input id="chattext" class="grow" type="text" maxlength="280" placeholder="Plot quietly…" autocomplete="off" aria-label="Message to the other turncoats">
+          <button class="btn" type="submit">Send</button>
+        </form>
+      </section>
+      <section id="news" class="card hidden"></section>
+      <section id="players" class="card hidden"></section>
+      <section id="tools" class="card hidden"></section>
+    </main>
+    <footer>
+      <p><b>About:</b> Turncoat is a free hidden-role game for group chats.</p>
+      <p><a href="/">Start a new game</a> · <a href="/privacy">Privacy</a> · <a href="https://github.com/janwan2003/hidden-roles/issues">Support</a></p>
+    </footer>
+  </div>
+  <script src="/common.js"></script>
+  <script src="/game.js"></script>
+</body>
+</html>

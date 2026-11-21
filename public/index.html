@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Turncoat · the week-long traitor game for your group chat</title>
+  <meta name="description" content="Play a traitor game over a few days in your WhatsApp, iMessage, Slack or Discord chat. Secret roles, nightly eliminations, a daily vote. Free, no app, no sign-up.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Turncoat">
+  <meta property="og:title" content="Turncoat · the traitor game for your group chat">
+  <meta property="og:description" content="Secret turncoats, nightly eliminations and a daily vote, over a few days in the chat you already use. Free, no app, no sign-up.">
+  <meta property="og:image" content="https://pb-hidden-roles.pages.dev/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://pb-hidden-roles.pages.dev/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://pb-hidden-roles.pages.dev/">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon-180.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#12142a">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="top"><a class="brand" href="/"><img src="/icon.svg" alt="">Turncoat</a><a class="small" href="#how">How it works</a></header>
+    <section class="hero">
+      <svg class="moon" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="30" r="20" fill="#f0c05a"/><circle cx="40" cy="24" r="18" fill="#1d2045"/></svg>
+      <h1>Someone in your group chat is a turncoat.</h1>
+      <p class="lead">A traitor game that runs for a few days in the chat you already use. Secret roles, a quiet elimination every night and a vote every evening. Free, no app, no sign-up.</p>
+    </section>
+
+    <form id="create" class="card glow" novalidate>
+      <h2>Start a game</h2>
+      <div class="field">
+        <label for="gname">Game name</label>
+        <input id="gname" type="text" maxlength="40" required placeholder="Christmas at Grandma's" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="nick">Your nickname</label>
+        <input id="nick" type="text" maxlength="20" required placeholder="Sam" autocomplete="nickname">
+      </div>
+      <div class="field">
+        <span id="pace-label" style="display:block;font-weight:600;margin-bottom:6px">Pace</span>
+        <div class="seg" role="radiogroup" aria-labelledby="pace-label">
+          <label><input type="radio" name="pace" value="daily" checked><b>One round a day</b><span>Night ends at 8 am, vote closes at 8 pm. Plays over 3 to 7 days.</span></label>
+          <label><input type="radio" name="pace" value="quick"><b>Quick game tonight</b><span>5-minute nights and 10-minute days, for one evening.</span></label>
+        </div>
+        <p class="hint">Either way, a phase ends early once everyone has voted.</p>
+      </div>
+      <button class="btn block" type="submit">Create game and get the invite link</button>
+      <p class="err" id="err" role="alert"></p>
+    </form>
+
+    <section id="how">
+      <h2>How it works</h2>
+      <div class="steps">
+        <div class="card"><span class="n">1</span><h3>Share one link</h3><p class="muted">Paste it in your group chat. Friends tap it and join with a nickname. 5 to 30 players.</p></div>
+        <div class="card"><span class="n">2</span><h3>Secret roles</h3><p class="muted">Turncoat deals 1 to 3 players a secret turncoat role. Only you see your own card.</p></div>
+        <div class="card"><span class="n">3</span><h3>Night</h3><p class="muted">The turncoats pick a loyal to take out, on a page only they can open. They have their own secret chat.</p></div>
+        <div class="card"><span class="n">4</span><h3>Day</h3><p class="muted">Argue it out in your chat, then everyone votes. The player with the most votes is banished and their role revealed.</p></div>
+      </div>
+      <p class="muted">The loyals win when every turncoat is banished. The turncoats win when they match the loyals in number. At the end everyone sees who was who, night by night.</p>
+    </section>
+
+    <section class="faq card">
+      <h2>Questions</h2>
+      <details><summary>Does everyone need to be online at the same time?</summary><p class="muted">No. With "one round a day" people vote whenever they like during the day. The game moves on at 8 am and 8 pm in your time zone, or as soon as everyone has voted.</p></details>
+      <details><summary>Which chat apps does it work with?</summary><p class="muted">Any of them: WhatsApp, iMessage, Messenger, Signal, Telegram, Slack, Teams, Discord. Turncoat is a web page, so the link opens in any browser on a phone or computer.</p></details>
+      <details><summary>Can anyone peek at the roles?</summary><p class="muted">No. Roles are dealt and kept on the server. Your phone only ever receives your own role, and the turncoats' names only if you are one.</p></details>
+      <details><summary>How many turncoats are there?</summary><p class="muted">One for 5 to 7 players, two for 8 to 11, three for 12 or more.</p></details>
+      <details><summary>Is it free?</summary><p class="muted">Yes. No ads, no account, no app. Games are deleted 60 days after the last move.</p></details>
+    </section>
+
+    <footer>
+      <p><b>About:</b> Turncoat is a free hidden-role game for group chats.</p>
+      <p><a href="/privacy">Privacy</a> · <a href="https://github.com/janwan2003/hidden-roles/issues">Support</a></p>
+    </footer>
+  </div>
+  <script src="/common.js"></script>
+  <script src="/home.js"></script>
+</body>
+</html>
