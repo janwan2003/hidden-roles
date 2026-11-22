@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "wrangler pages dev public --port 8841",
     "test:unit": "node --test tests/unit/*.test.js",
-    "test:e2e": "node tests/e2e/run.mjs"
+    "test:e2e": "node tests/e2e/run.mjs && node tests/e2e/edge.mjs",
+    "screens": "node tools/screens.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.0.0",

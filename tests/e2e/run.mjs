@@ -154,15 +154,21 @@ try {
     await T.page.locator('#chatform button').click();
     await T.page.locator('#chatlog', { hasText: `Going for ${victim.label}` }).waitFor();
     if (victim === victims[0]) await shot(T, 'night-turncoat-phone');
-    await T.page.locator(`[data-night="${ids[victim.label]}"]`).click();
+    // Wait for the vote to land: the next step may reload this very page (when the host is the turncoat).
+    await Promise.all([
+      T.page.waitForResponse((r) => r.url().endsWith('/vote') && r.request().method() === 'POST'),
+      T.page.locator(`[data-night="${ids[victim.label]}"]`).click(),
+    ]);
   }
   async function dayVote(target, voters) {
     for (const p of voters) {
       await p.page.reload();
       await p.page.locator('#main', { hasText: 'The vote' }).waitFor();
       const t = p === target ? all.find((q) => q !== p && voters.includes(q)) : target; // nobody votes for themself
-      await p.page.locator(`[data-day="${ids[t.label]}"]`).click();
-      await p.page.getByText('You voted for').first().waitFor().catch(() => {});
+      await Promise.all([
+        p.page.waitForResponse((r) => r.url().endsWith('/vote') && r.request().method() === 'POST'),
+        p.page.locator(`[data-day="${ids[t.label]}"]`).click(),
+      ]);
     }
   }
   const alive = new Set(all);
@@ -228,7 +234,9 @@ try {
   await ben.page.locator('#whoami', { hasText: 'Ben' }).waitFor();
   step('play again: same 6 players in ' + newId);
 
-  // 5. Cleanup: delete both games through the UI
+  // 5. Cleanup: delete both games through the UI. Close the other players' tabs first: their polls would
+  // (correctly) get a 404 once the game is gone, which the browser logs as a console error.
+  for (const p of all) if (p !== ann) await p.ctx.close();
   await ann.page.click('[data-delete]');
   await ann.page.waitForURL(BASE + '/');
   gameId = oldId;

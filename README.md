@@ -13,6 +13,8 @@ pnpm install
 npx wrangler d1 execute pb-hidden-roles --local --file schema.sql
 pnpm dev                                   # http://127.0.0.1:8841
 pnpm test:unit
-BASE=http://127.0.0.1:8841 pnpm test:e2e   # 6 browsers play a full game; screenshots in shots/
+BASE=http://127.0.0.1:8841 pnpm test:e2e   # run.mjs: 6 browsers play a full game; edge.mjs: spectator, personal link,
+                                           # leave/kick, turncoat win, host controls, 404. Screenshots in shots/
+BASE=http://127.0.0.1:8841 pnpm screens    # product screenshots -> public/screens + docs/screens (WebP)
 node tools/render-images.mjs               # og.png + icons
 ```

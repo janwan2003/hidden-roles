@@ -44,7 +44,10 @@
     try {
       const s = await api('games/' + gameId, { token });
       skew = s.now - Math.floor(Date.now() / 1000);
-      if (token && !s.me) { store.del(gameId); token = null; }
+      if (token && !s.me) {
+        store.del(gameId); token = null;
+        if (S && S.me) toast(s.game.state === 'lobby' ? 'The host removed you from this game.' : 'This device is no longer signed in to the game.');
+      }
       S = s;
       render();
     } catch (e) {
@@ -122,7 +125,7 @@
       icon = '🏁'; title = 'Game over';
       when = g.winner === 'loyal' ? 'The loyals won' : g.winner === 'turncoat' ? 'The turncoats won' : 'The host ended the game early';
     }
-    set('head', `<div class="phase"><span class="icon" aria-hidden="true">${icon}</span><div><h1 style="font-size:1.7rem;margin:0">${esc(g.name)}</h1>
+    set('head', `<div class="phase"><span class="icon" aria-hidden="true">${icon}</span><div><h1 class="gname">${esc(g.name)}</h1>
       <div><b>${title}</b> <span class="when">· ${when}</span></div></div></div>`);
   }
 
@@ -132,13 +135,14 @@
     const el = $('role');
     el.className = `card role ${me.role}${roleShown || S.game.state === 'over' ? ' shown' : ''}`;
     const mates = (S.turncoats || []).filter((t) => t.id !== me.id);
-    const body = me.role === 'turncoat'
+    const over = S.game.state === 'over';
+    const body = over ? '' : me.role === 'turncoat'
       ? `<p class="muted">Take out the loyals one by one at night, and stay hidden in the vote.</p>
          ${mates.length ? `<p>Your fellow turncoat${mates.length > 1 ? 's' : ''}: <b>${mates.map((m) => esc(m.name) + (m.alive ? '' : ' (out)')).join(', ')}</b></p>` : '<p>You are the only turncoat. Good luck.</p>'}`
       : `<p class="muted">Find the turncoat${S.game.turncoats > 1 ? 's' : ''} hiding in your group and vote them out before they outnumber you.</p>`;
-    set('role', `<span class="pill">${me.alive ? 'Your secret role' : 'Your role (you are out)'}</span>
+    set('role', `<span class="pill">${over ? 'You played as' : me.alive ? 'Your secret role' : 'Your role (you are out)'}</span>
       <div class="face">${me.role === 'turncoat' ? '🗡️ Turncoat' : '🛡️ Loyal'}</div>${body}
-      <button class="btn ghost small" data-hide-role style="min-height:36px;padding:6px 12px">Hide</button>
+      ${over ? '' : '<button class="btn ghost small hide-role" data-hide-role>Hide</button>'}
       <button class="cover" data-show-role><span style="font-size:2rem">🃏</span><span>Tap to see your secret role</span><span class="small muted">Check nobody is looking</span></button>`);
   }
   $('role').addEventListener('click', (e) => {
@@ -166,7 +170,7 @@
         <div class="meter" aria-hidden="true"><i style="width:${pct}%"></i></div>
         <p class="muted">Send the link to your group chat. Anyone who opens it can join with a nickname until the host starts.
         ${S.players.length >= game.min_players ? `With ${S.players.length} players there will be <b>${game.turncoats} turncoat${game.turncoats > 1 ? 's' : ''}</b>.` : `You need at least ${game.min_players} players.`}</p>
-        <div class="row"><button class="btn grow" data-invite>Invite your group</button></div>
+        ${me ? '<div class="row"><button class="btn grow" data-invite>Invite your group</button></div>' : ''}
         ${me && me.host ? `<div class="row" style="margin-top:10px"><button class="btn ghost grow" data-start ${need ? 'disabled' : ''}>Deal the roles and start</button></div>
           <p class="hint">${game.pace === 'quick' ? 'Quick game: 5-minute nights, 10-minute days.' : 'One round a day: night ends at 8 am, the vote closes at 8 pm.'} Nobody can join after the start.</p>` : me ? '<p class="hint">The host starts the game once everyone is in.</p>' : ''}</div>`;
     } else if (game.state === 'night') {
@@ -175,14 +179,14 @@
         const loyals = S.players.filter((p) => p.alive && p.id !== me.id && !(S.turncoats || []).some((t) => t.id === p.id))
           .map((p) => ({ ...p, tag: (S.picks || []).filter((x) => x.target === p.id).map((x) => nameOf(x.by)).join(', ') }));
         const tcs = (S.turncoats || []).filter((t) => t.alive);
-        const waiting = tcs.filter((t) => !(S.picks || []).some((x) => x.by === t.id)).map((t) => esc(t.name));
+        const waiting = tcs.filter((t) => !(S.picks || []).some((x) => x.by === t.id)).map((t) => (t.id === me.id ? 'you' : esc(t.name)));
         html += `<div class="card glow"><h2>🗡️ Who do you take out tonight?</h2>
           <p class="muted">Only turncoats see this. ${tcs.length > 1 ? 'The most-picked name goes; a tie is settled at random. ' : ''}You can change your pick until morning.</p>
           ${pickList(loyals, mine ? mine.target : null, 'night')}
           <p class="small muted">${waiting.length ? `Still to pick: ${waiting.join(', ')}.` : 'Everyone has picked. Morning comes now.'}</p></div>`;
       } else if (me && me.alive) {
         html += `<div class="card"><h2>🌙 Night falls</h2><p class="muted">The turncoats are choosing someone to take out. Act normal in the chat. You will find out in the morning.</p></div>`;
-      } else {
+      } else if (me) {
         html += outCard();
       }
     } else if (game.state === 'day') {
@@ -191,7 +195,7 @@
       if (me && me.alive) {
         const cands = S.players.filter((p) => p.alive && p.id !== me.id).map((p) => ({ ...p, tag: p.voted ? 'voted' : '' }));
         html += `<div class="card glow"><h2>🗳️ The vote</h2>
-          <p class="muted">Talk it over in your group chat, then vote for who you think is a turncoat. The most votes is banished and their role revealed; a tie banishes nobody. Votes stay secret until the vote closes, and you can change yours until then.</p>
+          <p class="muted">Talk it over in your group chat, then vote for who you think is a turncoat. Most votes is banished and their role revealed; a tie banishes nobody. Votes stay secret until the vote closes, and you can change yours until then.</p>
           ${pickList(cands, S.vote.mine, 'day')}
           <p class="small muted"><b>${S.vote.voted} of ${S.vote.of}</b> have voted. ${S.vote.mine ? `You voted for <b>${esc(nameOf(S.vote.mine))}</b>.` : 'You have not voted yet.'}</p></div>`;
       } else if (me) html += outCard();
@@ -306,7 +310,7 @@
       if (shownRole) tag = `<small title="${p.alive ? shownRole : p.out_how === 'murder' ? `taken out on night ${p.out_day}` : `banished on day ${p.out_day}`}" class="${shownRole === 'turncoat' ? 'red' : 'green'}">${shownRole}${p.alive ? '' : p.out_how === 'murder' ? ` · 🌙 ${p.out_day}` : ` · 🗳️ ${p.out_day}`}</small>`;
       else if (p.id === game.host_id) tag = '<small>host</small>';
       const kick = game.state === 'lobby' && me && me.host && p.id !== me.id
-        ? `<button class="btn ghost small" style="min-height:30px;padding:2px 8px" data-kick="${p.id}" aria-label="Remove ${esc(p.name)}">✕</button>` : '';
+        ? `<button class="btn ghost small kick" data-kick="${p.id}" aria-label="Remove ${esc(p.name)}">✕</button>` : '';
       return `<li class="${p.alive ? '' : 'out'}">${avatar(p)}<span class="nm"><span>${esc(p.name)}${me && p.id === me.id ? ' (you)' : ''}</span>${tag}</span>${kick}</li>`;
     });
     const alive = S.players.filter((p) => p.alive).length;
